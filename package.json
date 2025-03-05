@@ -3,17 +3,17 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "build:bridge": "cargo build-bpf --manifest-path=./bridge/program/Cargo.toml --bpf-out-dir=./dist/program",
+    "build:bridge": "cargo build-sbf --manifest-path=./bridge/program/Cargo.toml --sbf-out-dir=./dist/program",
     "clean:bridge": "cargo clean --manifest-path=./bridge/program/Cargo.toml && rm -rf ./dist",
-    "test:bridge": "cargo test-bpf --manifest-path=./bridge/program/Cargo.toml",
+    "test:bridge": "cargo test-sbf --manifest-path=./bridge/program/Cargo.toml",
 
-    "build:commission": "cargo build-bpf --manifest-path=./commission/program/Cargo.toml --bpf-out-dir=./dist/program",
+    "build:commission": "cargo build-sbf --manifest-path=./commission/program/Cargo.toml --sbf-out-dir=./dist/program",
     "clean:commission": "cargo clean --manifest-path=./commission/program/Cargo.toml && rm -rf ./dist",
-    "test:commission": "cargo test-bpf --manifest-path=./commission/program/Cargo.toml",
+    "test:commission": "cargo test-sbf --manifest-path=./commission/program/Cargo.toml",
 
-    "build:upgrade": "cargo build-bpf --manifest-path=./upgrade/program/Cargo.toml --bpf-out-dir=./dist/program",
+    "build:upgrade": "cargo build-sbf --manifest-path=./upgrade/program/Cargo.toml --sbf-out-dir=./dist/program",
     "clean:upgrade": "cargo clean --manifest-path=./upgrade/program/Cargo.toml && rm -rf ./dist",
-    "test:upgrade": "cargo test-bpf --manifest-path=./upgrade/program/Cargo.toml"
+    "test:upgrade": "cargo test-sbf --manifest-path=./upgrade/program/Cargo.toml"
   },
   "dependencies": {
     "@solana/web3.js": "^1.7.0",

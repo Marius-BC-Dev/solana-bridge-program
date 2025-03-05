@@ -4,8 +4,9 @@ use borsh::{
     BorshDeserialize, BorshSerialize,
 };
 use mpl_token_metadata::{
-    instruction::{create_master_edition_v3, create_metadata_accounts_v3, verify_collection},
-    state::{DataV2, TokenStandard},
+    instructions::{CreateMasterEditionV3, CreateMetadataAccountV3, VerifyCollection, CreateMetadataAccountV3InstructionArgs},
+    types::{DataV2, TokenStandard},
+    accounts::Metadata,
 };
 use solana_program::{
     account_info::{AccountInfo, next_account_info},
@@ -13,6 +14,7 @@ use solana_program::{
     program::{invoke, invoke_signed}, pubkey::Pubkey, secp256k1_recover::{SECP256K1_PUBLIC_KEY_LENGTH, SECP256K1_SIGNATURE_LENGTH}, system_instruction,
     sysvar::{rent::Rent, Sysvar},
 };
+use solana_instruction::{AccountMeta, Instruction};
 use spl_associated_token_account::{create_associated_token_account, get_associated_token_address};
 use spl_token::{
     instruction::{initialize_mint, mint_to, transfer},
@@ -492,7 +494,7 @@ pub fn process_withdraw_ft<'a>(
         return Err(LibError::NotInitialized.into());
     }
 
-    if *metadata_info.key != mpl_token_metadata::pda::find_metadata_account(mint_info.key).0 {
+    if *metadata_info.key != Metadata::find_pda(mint_info.key).0 {
         return Err(LibError::WrongMetadataAccount.into());
     }
 
@@ -511,7 +513,7 @@ pub fn process_withdraw_ft<'a>(
         )?;
     }
 
-    let metadata: mpl_token_metadata::state::Metadata = BorshDeserialize::deserialize(&mut metadata_info.data.borrow_mut().as_ref())?;
+    let metadata: mpl_token_metadata::accounts::Metadata = Metadata::from_bytes(&mut metadata_info.data.borrow_mut().as_ref())?;
 
     let mint: spl_token::state::Mint = Mint::unpack_from_slice(&mut mint_info.data.borrow_mut().as_ref())?;
 
@@ -523,9 +525,9 @@ pub fn process_withdraw_ft<'a>(
             TransferData::new_ft_transfer(
                 mint_info.key.to_bytes(),
                 amount,
-                metadata.data.name.trim_matches(char::from(0)).to_string(),
-                metadata.data.symbol.trim_matches(char::from(0)).to_string(),
-                metadata.data.uri.trim_matches(char::from(0)).to_string(),
+                metadata.name.trim_matches(char::from(0)).to_string(),
+                metadata.symbol.trim_matches(char::from(0)).to_string(),
+                metadata.uri.trim_matches(char::from(0)).to_string(),
                 mint.decimals,
             ),
         ),
@@ -662,7 +664,7 @@ pub fn process_withdraw_nft<'a>(
         return Err(LibError::NotInitialized.into());
     }
 
-    if *metadata_info.key != mpl_token_metadata::pda::find_metadata_account(mint_info.key).0 {
+    if *metadata_info.key != Metadata::find_pda(mint_info.key).0 {
         return Err(LibError::WrongMetadataAccount.into());
     }
 
@@ -681,12 +683,12 @@ pub fn process_withdraw_nft<'a>(
         )?;
     }
 
-    let metadata: mpl_token_metadata::state::Metadata = BorshDeserialize::deserialize(&mut metadata_info.data.borrow_mut().as_ref())?;
+    let metadata: mpl_token_metadata::accounts::Metadata = Metadata::from_bytes(&mut metadata_info.data.borrow_mut().as_ref())?;
 
     // Default metadata - from token
-    let mut name = metadata.data.name;
-    let mut symbol = metadata.data.symbol;
-    let mut uri = metadata.data.uri;
+    let mut name = metadata.name;
+    let mut symbol = metadata.symbol;
+    let mut uri = metadata.uri;
 
     let mut collection: Option<[u8; 32]> = None;
 
@@ -694,14 +696,14 @@ pub fn process_withdraw_nft<'a>(
         let collection_key = metadata.collection.unwrap().key;
 
         let collection_metadata_info = next_account_info(account_info_iter)?;
-        if *collection_metadata_info.key != mpl_token_metadata::pda::find_metadata_account(&collection_key).0 {
+        if *collection_metadata_info.key != Metadata::find_pda(&collection_key).0 {
             return Err(LibError::WrongMetadataAccount.into());
         }
 
         // If collection exists, use its metadata (name and symbol) instead of token metadata
-        let collection_metadata: mpl_token_metadata::state::Metadata = BorshDeserialize::deserialize(&mut collection_metadata_info.data.borrow_mut().as_ref())?;
-        name = collection_metadata.data.name;
-        symbol = collection_metadata.data.symbol;
+        let collection_metadata: mpl_token_metadata::accounts::Metadata = Metadata::from_bytes(&mut collection_metadata_info.data.borrow_mut().as_ref())?;
+        name = collection_metadata.name;
+        symbol = collection_metadata.symbol;
         collection = Some(collection_key.to_bytes())
     }
 
@@ -1116,8 +1118,9 @@ fn call_create_metadata<'a>(
     data: SignedMetadata,
     seeds: [u8; 32],
 ) -> ProgramResult {
+    /*
     let create_metadata_instruction = create_metadata_accounts_v3(
-        mpl_token_metadata::id(),
+        mpl_token_metadata::ID,
         *metadata_account.key,
         *mint.key,
         *mint_authority.key,
@@ -1134,6 +1137,47 @@ fn call_create_metadata<'a>(
         None,
         None,
     );
+    */
+    AccountMeta::new(*metadata_account.key, false);
+    let args = CreateMetadataAccountV3InstructionArgs{
+        data: DataV2{
+            name: data.name,
+            symbol: data.symbol,
+            uri: data.uri,
+            seller_fee_basis_points: 0,
+            creators: None,
+            collection: None,
+            uses: None,
+        },
+        is_mutable: true,
+        collection_details: None,
+    };
+   
+    let metadata_account = CreateMetadataAccountV3{
+        metadata: *metadata_account.key,
+        mint: *mint.key,
+        mint_authority: *mint_authority.key,
+        payer: *payer.key,
+        update_authority: (*mint_authority.key, true),
+        system_program: system_program::ID,
+        rent: None,
+    };
+    
+    // let create_metadata_instruction = Instruction {
+    //     program_id: mpl_token_metadata::ID,
+    //     accounts: vec![
+    //         // AccountMeta::new(*metadata_account.key, false),
+    //         // AccountMeta::new_readonly(*mint.key, false),
+    //         // AccountMeta::new_readonly(*mint_authority.key, true),
+    //         // AccountMeta::new(*payer.key, true),
+    //         // AccountMeta::new_readonly(*mint_authority.key, true),
+    //         // AccountMeta::new_readonly(system_program::ID, false),
+    //     ],
+    //     data: vec![],
+    // };
+
+    let create_metadata_instruction = metadata_account.instruction(args);
+
 
     invoke_signed(
         &create_metadata_instruction,

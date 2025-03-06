@@ -21,7 +21,7 @@ bs58 = "0.5.1"
 solana-bridge-lib = {path = "../../lib", features = [ "no-entrypoint" ]}
 
 [dev-dependencies]
-solana-sdk = "1.16.9"
+solana-sdk = "2.1.0"
 
 [lib]
 name = "upgrade"

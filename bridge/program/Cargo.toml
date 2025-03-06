@@ -9,9 +9,11 @@ edition = "2021"
 no-entrypoint = []
 
 [dependencies]
+atty = "0.2.14"
+termcolor = "1.4.1"
 solana-instruction ={version = "2.2.1", features = [ "bincode", "serde", "std" ]}
-solana-sdk = "2.1.9"
-solana-program = "2.1.9"
+solana-sdk = "2.2.1"
+solana-program = "2.2.1"
 spl-token = { version = "7.0.0", features = ["no-entrypoint"] }
 borsh =  "^0.10.4"
 mpl-token-metadata = "5.1.0"

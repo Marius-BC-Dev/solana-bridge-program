@@ -1745,7 +1745,6 @@ dependencies = [
  "num-traits",
  "shank",
  "solana-bridge-lib",
- "solana-instruction",
  "solana-program",
  "solana-sdk",
  "spl-associated-token-account",

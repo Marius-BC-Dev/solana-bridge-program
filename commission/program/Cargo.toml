@@ -9,7 +9,7 @@ edition = "2021"
 no-entrypoint = []
 
 [dependencies]
-solana-program = "1.16.9"
+solana-program = "2.1.0"
 spl-token = { version = "5.0.0", features = ["no-entrypoint"] }
 borsh = ">= 0.9, < 1.0"
 thiserror = "^1.0"

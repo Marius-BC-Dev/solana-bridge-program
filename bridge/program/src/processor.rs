@@ -15,7 +15,6 @@ use solana_program::{
     sysvar::{rent::Rent, Sysvar},
     system_program as g_system_program,
 };
-use solana_instruction::{AccountMeta, Instruction};
 use spl_associated_token_account::{create_associated_token_account, get_associated_token_address};
 use spl_token::{
     instruction::{initialize_mint, mint_to, transfer},
@@ -1139,7 +1138,6 @@ fn call_create_metadata<'a>(
         None,
     );
     */
-    AccountMeta::new(*metadata_account.key, false);
     let args = CreateMetadataAccountV3InstructionArgs{
         data: DataV2{
             name: data.name,
@@ -1163,19 +1161,7 @@ fn call_create_metadata<'a>(
         system_program: g_system_program::ID,
         rent: None,
     };
-    
-    // let create_metadata_instruction = Instruction {
-    //     program_id: mpl_token_metadata::ID,
-    //     accounts: vec![
-    //         // AccountMeta::new(*metadata_account.key, false),
-    //         // AccountMeta::new_readonly(*mint.key, false),
-    //         // AccountMeta::new_readonly(*mint_authority.key, true),
-    //         // AccountMeta::new(*payer.key, true),
-    //         // AccountMeta::new_readonly(*mint_authority.key, true),
-    //         // AccountMeta::new_readonly(system_program::ID, false),
-    //     ],
-    //     data: vec![],
-    // };
+
 
     let create_metadata_instruction = metadata_account.instruction(args);
 

@@ -9,7 +9,7 @@ edition = "2021"
 no-entrypoint = []
 
 [dependencies]
-atty = "0.2.14"
+atty = "0.2"
 termcolor = "1.4.1"
 solana-instruction ={version = "2.2.1", features = [ "bincode", "serde", "std" ]}
 solana-sdk = "2.2.1"

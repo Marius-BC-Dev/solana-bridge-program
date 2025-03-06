@@ -9,7 +9,7 @@ edition = "2021"
 no-entrypoint = []
 
 [dependencies]
-atty = "0.2.14"
+atty = "0.2"
 termcolor = "1.4.1"
 solana-program = "2.2.1"
 spl-token = { version = "7.0.0", features = ["no-entrypoint"] }

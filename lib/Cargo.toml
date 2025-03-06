@@ -9,7 +9,7 @@ edition = "2021"
 no-entrypoint = []
 
 [dependencies]
-solana-program = ">=1.14"
+solana-program = "1.16.9"
 borsh = ">= 0.9, < 1.0"
 num-derive = "^0.3"
 thiserror = "^1.0"
@@ -20,7 +20,7 @@ mpl-token-metadata = "5.1.0"
 spl-associated-token-account = {version = "6.0.0", features = [ "no-entrypoint" ] }
 
 [dev-dependencies]
-solana-sdk = ">=1.14"
+solana-sdk = "1.16.9"
 
 [lib]
 name = "lib"

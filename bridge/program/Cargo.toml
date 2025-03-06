@@ -10,8 +10,8 @@ no-entrypoint = []
 
 [dependencies]
 solana-instruction ={version = "2.2.1", features = [ "bincode", "serde", "std" ]}
-solana-sdk = ">=1.14"
-solana-program = ">=1.14"
+solana-sdk = "1.16.9"
+solana-program = "1.16.9"
 spl-token = { version = ">= 3.5.0", features = ["no-entrypoint"] }
 borsh = ">= 0.9, < 1.0"
 mpl-token-metadata = "5.1.0"
@@ -25,7 +25,7 @@ bs58 = "0.5.1"
 solana-bridge-lib = {path = "../../lib", features = [ "no-entrypoint" ]}
 
 [dev-dependencies]
-solana-sdk = ">=1.14"
+solana-sdk = "1.16.9"
 
 [lib]
 name = "bridge"

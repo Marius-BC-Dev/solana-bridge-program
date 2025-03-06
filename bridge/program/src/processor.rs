@@ -13,6 +13,7 @@ use solana_program::{
     entrypoint::ProgramResult, hash, msg,
     program::{invoke, invoke_signed}, pubkey::Pubkey, secp256k1_recover::{SECP256K1_PUBLIC_KEY_LENGTH, SECP256K1_SIGNATURE_LENGTH}, system_instruction,
     sysvar::{rent::Rent, Sysvar},
+    system_program as g_system_program,
 };
 use solana_instruction::{AccountMeta, Instruction};
 use spl_associated_token_account::{create_associated_token_account, get_associated_token_address};
@@ -1149,7 +1150,7 @@ fn call_create_metadata<'a>(
             collection: None,
             uses: None,
         },
-        is_mutable: true,
+        is_mutable: false,
         collection_details: None,
     };
    
@@ -1159,7 +1160,7 @@ fn call_create_metadata<'a>(
         mint_authority: *mint_authority.key,
         payer: *payer.key,
         update_authority: (*mint_authority.key, true),
-        system_program: system_program::ID,
+        system_program: g_system_program::ID,
         rent: None,
     };
     

@@ -5,3 +5,5 @@ members=[
   "upgrade/program",
   "lib",
 ]
+
+resolver = "2"  # 显式指定 resolver 版本

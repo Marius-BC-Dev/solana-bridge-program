@@ -10,7 +10,7 @@ no-entrypoint = []
 
 [dependencies]
 solana-program = "1.16.24"
-spl-token = { version = "5.0.0", features = ["no-entrypoint"] }
+spl-token = "4.0.0"
 borsh = "0.10.3"
 thiserror = "1.0.48"
 shank = { version = "0.4.2" }

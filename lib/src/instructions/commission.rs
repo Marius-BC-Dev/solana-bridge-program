@@ -132,12 +132,12 @@ pub fn charge_commission_native(
             AccountMeta::new_readonly(sysvar::rent::id(), false),
             AccountMeta::new_readonly(spl_token::id(), false),
         ],
-        data: todo!(),
-        // data: CommissionInstruction::ChargeCommission(CommissionArgs {
-        //     token,
-        //     deposit_token,
-        //     deposit_token_amount,
-        // }).try_to_vec().unwrap(),
+        // data: todo!(),
+        data: CommissionInstruction::ChargeCommission(CommissionArgs {
+            token,
+            deposit_token,
+            deposit_token_amount,
+        }).try_to_vec().unwrap(),
     }
 }
 

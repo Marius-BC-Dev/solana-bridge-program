@@ -1152,7 +1152,7 @@ fn call_create_metadata<'a>(
         collection_details: None,
     };
    
-    let metadata_account = CreateMetadataAccountV3{
+    let metadata_account_v3 = CreateMetadataAccountV3{
         metadata: *metadata_account.key,
         mint: *mint.key,
         mint_authority: *mint_authority.key,
@@ -1163,7 +1163,7 @@ fn call_create_metadata<'a>(
     };
 
 
-    let create_metadata_instruction = metadata_account.instruction(args);
+    let create_metadata_instruction = metadata_account_v3.instruction(args);
 
 
     invoke_signed(
